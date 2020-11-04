@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Discord.Bot.AmongUs.Executable", "Discord.Bot.AmongUs.Executable\Discord.Bot.AmongUs.Executable.csproj", "{C6056FA2-F805-46E3-BB20-1C2CA5D05ADB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Discord.Bot.AmongUs.Library", "Discord.Bot.AmongUs.Library\Discord.Bot.AmongUs.Library.csproj", "{CEC30DB3-CA5E-4D89-A955-369A21C7887B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C6056FA2-F805-46E3-BB20-1C2CA5D05ADB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6056FA2-F805-46E3-BB20-1C2CA5D05ADB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6056FA2-F805-46E3-BB20-1C2CA5D05ADB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6056FA2-F805-46E3-BB20-1C2CA5D05ADB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEC30DB3-CA5E-4D89-A955-369A21C7887B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEC30DB3-CA5E-4D89-A955-369A21C7887B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEC30DB3-CA5E-4D89-A955-369A21C7887B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEC30DB3-CA5E-4D89-A955-369A21C7887B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {60B3BAA3-CAD6-4D2F-8B07-95562C47E421}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,167 @@
+﻿{
+  "token": "your-token-here",
+  "prefix": "bau@",
+  "leave-lobby": "x",
+  "play-pause": "play_pause",
+  "end-game": "stop_button",
+  "emojis": [
+    {
+      "name": "aublack",
+      "path": "AmongUsEmojis\\aublack.png"
+    },
+    {
+      "name": "aublackdead",
+      "path": "AmongUsEmojis\\aublackdead.png"
+    },
+    {
+      "name": "aublue",
+      "path": "AmongUsEmojis\\aublue.png"
+    },
+    {
+      "name": "aubluedead",
+      "path": "AmongUsEmojis\\aubluedead.png"
+    },
+    {
+      "name": "aubrown",
+      "path": "AmongUsEmojis\\aubrown.png"
+    },
+    {
+      "name": "aubrowndead",
+      "path": "AmongUsEmojis\\aubrowndead.png"
+    },
+    {
+      "name": "aucyan",
+      "path": "AmongUsEmojis\\aucyan.png"
+    },
+    {
+      "name": "aucyandead",
+      "path": "AmongUsEmojis\\aucyandead.png"
+    },
+    {
+      "name": "augreen",
+      "path": "AmongUsEmojis\\augreen.png"
+    },
+    {
+      "name": "augreendead",
+      "path": "AmongUsEmojis\\augreendead.png"
+    },
+    {
+      "name": "aulime",
+      "path": "AmongUsEmojis\\aulime.png"
+    },
+    {
+      "name": "aulimedead",
+      "path": "AmongUsEmojis\\aulimedead.png"
+    },
+    {
+      "name": "auorange",
+      "path": "AmongUsEmojis\\auorange.png"
+    },
+    {
+      "name": "auorangedead",
+      "path": "AmongUsEmojis\\auorangedead.png"
+    },
+    {
+      "name": "aupink",
+      "path": "AmongUsEmojis\\aupink.png"
+    },
+    {
+      "name": "aupinkdead",
+      "path": "AmongUsEmojis\\aupinkdead.png"
+    },
+    {
+      "name": "aupurple",
+      "path": "AmongUsEmojis\\aupurple.png"
+    },
+    {
+      "name": "aupurpledead",
+      "path": "AmongUsEmojis\\aupurpledead.png"
+    },
+    {
+      "name": "aured",
+      "path": "AmongUsEmojis\\aured.png"
+    },
+    {
+      "name": "aureddead",
+      "path": "AmongUsEmojis\\aureddead.png"
+    },
+    {
+      "name": "auwhite",
+      "path": "AmongUsEmojis\\auwhite.png"
+    },
+    {
+      "name": "auwhitedead",
+      "path": "AmongUsEmojis\\auwhitedead.png"
+    },
+    {
+      "name": "auyellow",
+      "path": "AmongUsEmojis\\auyellow.png"
+    },
+    {
+      "name": "auyellowdead",
+      "path": "AmongUsEmojis\\auyellowdead.png"
+    }
+  ],
+  "amongus-emojis": [
+    {
+      "alive": "aublack",
+      "dead": "aublackdead",
+      "color": "#000000"
+    },
+    {
+      "alive": "aublue",
+      "dead": "aubluedead",
+      "color": "#0000FF"
+    },
+    {
+      "alive": "aubrown",
+      "dead": "aubrowndead",
+      "color": "#8B4513"
+    },
+    {
+      "alive": "aucyan",
+      "dead": "aucyandead",
+      "color": "#00FFFF"
+    },
+    {
+      "alive": "augreen",
+      "dead": "augreendead",
+      "color": "#008000"
+    },
+    {
+      "alive": "aulime",
+      "dead": "aulimedead",
+      "color": "#00FF00"
+    },
+    {
+      "alive": "auorange",
+      "dead": "auorangedead",
+      "color": "#FFA500"
+    },
+    {
+      "alive": "aupink",
+      "dead": "aupinkdead",
+      "color": "#FF69B4"
+    },
+    {
+      "alive": "aupurple",
+      "dead": "aupurpledead",
+      "color": "#800080"
+    },
+    {
+      "alive": "aured",
+      "dead": "aureddead",
+      "color": "#FF0000"
+    },
+    {
+      "alive": "auwhite",
+      "dead": "auwhitedead",
+      "color": "#FFFFFF"
+    },
+    {
+      "alive": "auyellow",
+      "dead": "auyellowdead",
+      "color": "#FFFF00"
+    }
+  ]
+}
