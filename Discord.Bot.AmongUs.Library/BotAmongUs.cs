@@ -15,7 +15,10 @@ using System.Threading.Tasks;
 
 namespace Discord.Bot.AmongUs.Library
 {
-    //PERMISSIONS INTEGER 1086400576
+    //Permissions.ManageEmojis
+    //Permissions.ManageMessages
+    //Permissions.MuteMembers
+    //Permissions.DeafenMembers
 
     /// <summary>
     /// the bot implementation
@@ -45,13 +48,13 @@ namespace Discord.Bot.AmongUs.Library
                 Services = GetServiceProvider()
             };
             _CommandsExtension = _Client.UseCommandsNext(commands);
-            _CommandsExtension.RegisterCommands<LobbyTextCommands>();
+            _CommandsExtension.RegisterCommands<TextCommands>();
 
             var interactivityConfiguration = new InteractivityConfiguration
             {
                 Timeout = TimeSpan.FromMinutes(5)
             };
-            
+
             _Client.UseInteractivity(interactivityConfiguration);
             _Client.Ready += OnClientIsReady;
             _Client.GuildAvailable += OnGuildAvailable;
@@ -65,6 +68,7 @@ namespace Discord.Bot.AmongUs.Library
         {
             var serviceCollection = new ServiceCollection();
 
+            serviceCollection.AddSingleton(this);
             serviceCollection.AddSingleton(new AmongUsLobbyTracker(_Configuration));
 
             return serviceCollection.BuildServiceProvider();
@@ -93,24 +97,53 @@ namespace Discord.Bot.AmongUs.Library
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <returns></returns>
-        private Task OnGuildAvailable(DiscordClient sender, GuildCreateEventArgs e)
+        private Task OnGuildAvailable(DiscordClient sender, GuildCreateEventArgs arg)
         {
-            Task.Run(async () =>
+            return VerifyServerEmojis(arg.Guild);
+        }
+
+        /// <summary>
+        /// uploads the bot emojis to the server, if possible
+        /// </summary>
+        /// <param name="guild">the guild on which to upload the emoji</param>
+        /// <param name="channel">the channel on which to send the error messages, if allowed</param>
+        /// <param name="showErrors">shows error messages</param>
+        /// <returns></returns>
+        public async Task VerifyServerEmojis(DiscordGuild guild, DiscordChannel channel = null, bool showErrors = false)
+        {
+            var missingEmojis = _Configuration.Emojis.Where(x => !guild.Emojis.Values.Any(e => e.Name == x.DiscordName));
+            if (missingEmojis.Any())
             {
-                foreach (var emoji in _Configuration.Emojis)
+                //bot has the right to add emojis
+                if (PermissionsManager.UserHasPermission(guild, _Client.CurrentUser, Permissions.ManageEmojis))
                 {
-                    if (!e.Guild.Emojis.Values.Any(x => x.Name == emoji.DiscordName))
+                    //check if the server has the required amount of emoji slots
+                    if (50 - guild.Emojis.Count < missingEmojis.Count())
                     {
-                        var localFilePath = Path.Combine(Directory.GetCurrentDirectory(), emoji.LocalPath);
-                        using (var stream = File.OpenRead(localFilePath))
+                        if (channel != null)
+                            await channel.SendMessageAsync($"the server doesn't have enough emoji slots left for me");
+
+                        return;
+                    }
+
+                    foreach (var emoji in missingEmojis)
+                    {
+                        if (!guild.Emojis.Values.Any(x => x.Name == emoji.DiscordName))
                         {
-                            await e.Guild.CreateEmojiAsync(emoji.DiscordName, stream);
+                            var localFilePath = Path.Combine(Directory.GetCurrentDirectory(), emoji.LocalPath);
+                            using (var stream = File.OpenRead(localFilePath))
+                            {
+                                await guild.CreateEmojiAsync(emoji.DiscordName, stream);
+                            }
                         }
                     }
                 }
-            });
-
-            return Task.CompletedTask;
+                else if (showErrors)
+                {
+                    if(channel != null)
+                        await channel.SendMessageAsync($"i dont have the right to modify emoji");
+                }
+            }
         }
 
         /// <summary>

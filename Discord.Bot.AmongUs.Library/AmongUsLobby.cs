@@ -49,18 +49,20 @@ namespace Discord.Bot.AmongUs.Library
         /// </summary>
         /// <param name="context">the command context from which the lobby will be initialized</param>
         /// <returns></returns>
-        public async Task Initialize(CommandContext context)
+        public async Task<LobbyInitializationResult> Initialize(CommandContext context)
         {
             Context = context;
 
             _EmbedBuilder.Author = new DiscordEmbedBuilder.EmbedAuthor
             {
-                Name = $"{Context.User.Username}'s lobby",
                 IconUrl = Context.User.AvatarUrl
             };
 
             foreach (var player in _Players)
             {
+                if (!CheckIfEmojiExistsOnServer(player.Emoji.DiscordEmojiAlive) || !CheckIfEmojiExistsOnServer(player.Emoji.DiscordEmojiDead))
+                    return LobbyInitializationResult.MissingEmoji;
+
                 player.Alive = DiscordEmoji.FromName(Context.Client, player.Emoji.DiscordEmojiAlive);
                 player.Dead = DiscordEmoji.FromName(Context.Client, player.Emoji.DiscordEmojiDead);
                 _ValidReactEmojis.Add(player.Alive);
@@ -69,6 +71,15 @@ namespace Discord.Bot.AmongUs.Library
             CurrentGameStatus = await UpdateGameState(GameState.StartUp, null);
             _EmbedMessage = await Context.Channel.SendMessageAsync(embed: _EmbedBuilder);
             _ToBeDeletedMessages.Add(_EmbedMessage);
+
+            if (!CheckIfEmojiExistsOnServer(_Configuration.LeaveLobbyEmojiName))
+                return LobbyInitializationResult.MissingEmoji;
+
+            if (!CheckIfEmojiExistsOnServer(_Configuration.PlayPauseEmojiName))
+                return LobbyInitializationResult.MissingEmoji;
+
+            if (!CheckIfEmojiExistsOnServer(_Configuration.EndGameEmojiName))
+                return LobbyInitializationResult.MissingEmoji;
 
             _LeaveLobby = DiscordEmoji.FromName(Context.Client, _Configuration.LeaveLobbyEmojiName);
             _PlayGame = DiscordEmoji.FromName(Context.Client, _Configuration.PlayPauseEmojiName);
@@ -88,6 +99,8 @@ namespace Discord.Bot.AmongUs.Library
 
             _Interactivity = Context.Client.GetInteractivity();
             CurrentGameStatus = await UpdateGameState(GameState.InLobby, null);
+
+            return LobbyInitializationResult.Success;
         }
 
         /// <summary>
@@ -288,12 +301,11 @@ namespace Discord.Bot.AmongUs.Library
 
                     var updateEmbedColor = user == Context.User;
                     targetSlot.AssignedUser = user;
+                    UpdateAuthorDescription();
                     UpdateEmbededFields(!updateEmbedColor);
 
                     if (updateEmbedColor)
-                    {
                         await UpdateGameState(GameState.InLobby, targetSlot.Emoji.EmojiColor);
-                    }
                 }
             }
             else if (CurrentGameStatus == GameState.Paused)
@@ -375,6 +387,7 @@ namespace Discord.Bot.AmongUs.Library
                         _EmbedBuilder.Title = "loading, please wait";
                         _EmbedBuilder.Description = null;
                         _EmbedBuilder.Footer = null;
+                        UpdateAuthorDescription();
 
                         break;
                     }
@@ -383,6 +396,7 @@ namespace Discord.Bot.AmongUs.Library
                         _EmbedBuilder.Title = "waiting for players";
                         _EmbedBuilder.Description = "click on an emoji to join or x to leave this lobby";
                         _EmbedBuilder.Footer = null;
+                        UpdateAuthorDescription();
 
                         var voiceChannelMembers = GetPlayerToDiscordUserMapping(_Players);
                         if (voiceChannelMembers != null)
@@ -407,6 +421,7 @@ namespace Discord.Bot.AmongUs.Library
                         {
                             Text = $"{Context.User.Username} can use play/pause and stop to control the game state"
                         };
+                        UpdateAuthorDescription();
 
                         var voiceChannelMembers = GetPlayerToDiscordUserMapping(_Players);
                         if (voiceChannelMembers != null)
@@ -432,6 +447,7 @@ namespace Discord.Bot.AmongUs.Library
                         {
                             Text = $"{Context.User.Username} can click the player emoji to set dead or alive state"
                         };
+                        UpdateAuthorDescription();
 
                         var voiceChannelMembers = GetPlayerToDiscordUserMapping(_Players);
                         if (voiceChannelMembers != null)
@@ -455,6 +471,7 @@ namespace Discord.Bot.AmongUs.Library
                         _EmbedBuilder.Title = "closing lobby";
                         _EmbedBuilder.Description = null;
                         _EmbedBuilder.Footer = null;
+                        UpdateAuthorDescription();
 
                         var voiceChannelMembers = GetPlayerToDiscordUserMapping(_Players);
                         if (voiceChannelMembers != null)
@@ -519,6 +536,29 @@ namespace Discord.Bot.AmongUs.Library
                 await _EmbedMessage.ModifyAsync(embed: _EmbedBuilder.Build());
         }
 
+        /// <summary>
+        /// checks if the given emoji exists on server
+        /// </summary>
+        /// <returns>true if the emoji exists on server</returns>
+        bool CheckIfEmojiExistsOnServer(params string[] emojiName)
+        {
+            return emojiName.All(e => Context.Guild.Emojis.Values.Any(x => x.Name == e));
+        }
+
+        /// <summary>
+        /// updates the author description
+        /// </summary>
+        void UpdateAuthorDescription()
+        {
+            var authorName = $"{Context.User.Username}'s lobby";
+            authorName = authorName.PadRight(_Configuration.EmbedAuthorMaxLength);
+            int playerCount = _Players.Count(x => x.AssignedUser != null);
+            _EmbedBuilder.Author.Name = $"{authorName} {playerCount} / {_Configuration.MaxPlayerCount}";
+        }
+
+        /// <summary>
+        /// IDispose implementation
+        /// </summary>
         public async void Dispose()
         {
             await CleanupMessages();

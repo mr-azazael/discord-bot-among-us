@@ -1,4 +1,5 @@
-﻿using DSharpPlus.Entities;
+﻿using DSharpPlus;
+using DSharpPlus.Entities;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -56,5 +57,17 @@ namespace Discord.Bot.AmongUs.Library
             return guildMembers;
         }
 
+        public static DiscordMember GetGuildMemberForUser(this DiscordGuild guild, DiscordUser user)
+        {
+            if (guild.Owner.Id == user.Id)
+                return guild.Owner;
+
+            return guild.Members.FirstOrDefault(x => x.Value.Id == user.Id).Value;
+        }
+
+        public static bool HasRight(Permissions? usersRight, Permissions rightToCheck)
+        {
+            return (usersRight & rightToCheck) > 0;
+        }
     }
 }

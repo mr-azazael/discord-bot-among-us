@@ -9,6 +9,7 @@ namespace Discord.Bot.AmongUs.Library
     public class JsonConfiguration
     {
         public int MaxPlayerCount { get; private set; } = 10;
+        public int EmbedAuthorMaxLength { get; private set; } = 40;
 
         /// <summary>
         /// bot token
